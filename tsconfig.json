@@ -1,16 +1,15 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "outDir": "./build/types",
-    "types": ["node"],
+    "types": ["node", "@types/jest"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
   },
   "exclude": ["node_modules", "build"],
   "references": [{
-    //"path": "../shared"
   }],
   "include": ["./src"]
 }
