@@ -1,6 +1,6 @@
 {
   "name": "react-ssr-web",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "React SSR convenience functions.",
   "main": "build/index.js",
   "module": "build/esm/index.esm.js",

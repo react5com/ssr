@@ -20,7 +20,7 @@ export const renderHtml = (reducers: any, htmlTemplate: string, routes: any, req
   const content = renderToString(contentJsx);
 
   const isProd = process.env.NODE_ENV === 'production';
-  const serviceWorkerScript = isProd ? `<script src="/service-worker.js" defer></script>` : '';
+  const serviceWorkerScript = isProd ? `<script src="/static/js/service-worker.js" defer></script>` : '';
 
   const { helmet } = helmetContext;
   const helmetTitle = (helmet && helmet.title) ? helmet.title.toString() : '';
