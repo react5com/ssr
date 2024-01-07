@@ -13,13 +13,14 @@ export type RouteObjectSsr = {
   isNotFound?: boolean
 }
 
-export const ssr = (htmlTemplatePath: string, reducers: any, routes: any) => (
+export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, createServices?: (cookies: any) => any) => (
   req: express.Request, res: express.Response, next: express.NextFunction) => {
   const url_parts = parseUrl(req);
   const urlSearch = url_parts ? url_parts.search : "";
   const urlPath = url_parts ? url_parts.pathname : "";
 
-  const store = createServerStore(reducers, {} as any);
+  const customParams = createServices ? {services: createServices(req.cookies)} : {};
+  const store = createServerStore(reducers, customParams, {} as any);
   const htmlTemplate = fs.readFileSync(htmlTemplatePath, "utf8");
 
   const matches = matchRoutes(routes, urlPath || '');
