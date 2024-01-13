@@ -29,7 +29,9 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
   const urlSearch = url_parts ? url_parts.search : "";
   const urlPath = url_parts ? url_parts.pathname : "";
 
+  const originalCookies = {...req.cookies};
   const cookies = {...req.cookies};
+  console.log("cookies", cookies)
   const customParams = createServices ? {services: createServices(cookies)} : {};
   const store = createServerStore(reducers, customParams, {} as any);
   const htmlTemplate = fs.readFileSync(htmlTemplatePath, "utf8");
@@ -58,10 +60,12 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
     .then(() => {
       const content = renderHtml(reducers, htmlTemplate, routes, req, store);
 
-      const changedCookies = findChangedValues(req.cookies, cookies);
+      const changedCookies = findChangedValues(originalCookies, cookies);
+      console.log("wholeCookies", cookies);
+      console.log("changedCookies", changedCookies);
       for (const key in changedCookies) {
         res.cookie(key, changedCookies[key]);
-        console.log("changedCookies", key, changedCookies[key])
+        console.log("next changedCookie", key, changedCookies[key]);
       }
       // It's better to handle redirects on a client because of a browser cache.
       sendResponse(res, content);
@@ -77,7 +81,6 @@ function sendResponse(res: express.Response, content: string) {
   res.statusCode = res.statusCode || 200;
   res.setHeader("Content-Type", "text/html; charset=UTF-8");
   res.setHeader('X-Powered-By', 'react-ssr-web');
-  console.log("cookie", res.cookie)
   res.end(content);
 }
 
