@@ -6,6 +6,6 @@ export type RouteObjectSsr = {
     component: any;
     isNotFound?: boolean;
 };
-export declare const ssr: (htmlTemplatePath: string, reducers: any, routes: any, createServices?: ((cookies: any) => any) | undefined) => (req: express.Request, res: express.Response, next: express.NextFunction) => void;
+export declare const ssr: (htmlTemplatePath: string, reducers: any, routes: any, createServices?: (cookies: any) => any) => (req: express.Request, res: express.Response, next: express.NextFunction) => void;
 export default ssr;
 //# sourceMappingURL=ssr.d.ts.map
