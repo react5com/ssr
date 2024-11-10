@@ -1,12 +1,12 @@
 import express from 'express';
-import { matchRoutes } from "react-router";
+import { matchPath, matchRoutes } from "react-router";
 import parseUrl from "parseurl";
 import fs from "fs";
 import { createServerStore, type DispatchFunction } from 'react-reducer-ssr'
 import { renderHtml } from "./renderHtml";
 
 export type LoadDataFunction = (dispatch: DispatchFunction,
-  cookies: {}, urlSearch: string | null) => Promise<void>;
+  cookies: {}, urlSearch: string | null, params: any) => Promise<void>;
 export type RouteObjectSsr = {
   loadData?: LoadDataFunction,
   component: any,
@@ -45,8 +45,13 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
 
   const promises = matches
     .map(({ route }) => {
+      let params;
+      if(route.path) {
+        const match = matchPath({ path: route.path }, req.url);
+        params = match?.params;
+      }
       const r = route as RouteObjectSsr;
-      return r.loadData ? (r.loadData(store.dispatch, cookies, urlSearch)) : null;
+      return r.loadData ? (r.loadData(store.dispatch, cookies, urlSearch, params)) : null;
     })
     .map((promise) => {
       if (promise) {

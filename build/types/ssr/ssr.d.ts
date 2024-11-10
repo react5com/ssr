@@ -1,6 +1,6 @@
 import express from 'express';
 import { type DispatchFunction } from 'react-reducer-ssr';
-export type LoadDataFunction = (dispatch: DispatchFunction, cookies: {}, urlSearch: string | null) => Promise<void>;
+export type LoadDataFunction = (dispatch: DispatchFunction, cookies: {}, urlSearch: string | null, params: any) => Promise<void>;
 export type RouteObjectSsr = {
     loadData?: LoadDataFunction;
     component: any;
