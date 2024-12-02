@@ -33,7 +33,7 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
   const cookies = {...req.cookies};
   //console.log("cookies", cookies)
   const customParams = createServices ? {services: createServices(cookies)} : {};
-  const store = createServerStore(reducers, customParams, {} as any);
+  const store = createServerStore(reducers, customParams, null);
   const htmlTemplate = fs.readFileSync(htmlTemplatePath, "utf8");
 
   const matches = matchRoutes(routes, urlPath || '');
