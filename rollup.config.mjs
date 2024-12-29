@@ -1,4 +1,4 @@
-import pkg from "./package.json" assert { type: "json" };
+import pkg from "./package.json" with { type: "json" };
 
 import { babel } from "@rollup/plugin-babel";
 //import typescript from "@rollup/plugin-typescript";

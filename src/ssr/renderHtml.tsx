@@ -1,6 +1,6 @@
 import { renderToString } from "react-dom/server";
-import { StaticRouter as Router } from 'react-router-dom/server'
-import { Routes } from "react-router-dom";
+//import { StaticRouter as Router } from 'react-router-dom/server'
+import { Routes, StaticRouter as Router } from "react-router-dom";
 import { renderRoutes } from "react-router-layout";
 import { HelmetProvider } from "react-helmet-async";
 import serialize from "serialize-javascript";
