@@ -13,25 +13,15 @@ export type RouteObjectSsr = {
   isNotFound?: boolean
 }
 
-function findChangedValues(originalObject: Record<string, any>, copiedObject: Record<string, any>): Record<string, any> {
-  const changedValues: Record<string, any> = {};
-  for (const key in copiedObject) {
-    if (originalObject[key] !== copiedObject[key]) {
-      changedValues[key] = copiedObject[key];
-    }
-  }
-  return changedValues;
-}
-
 export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, createServices?: (cookies: any) => any) => (
   req: express.Request, res: express.Response, next: express.NextFunction) => {
   const url_parts = parseUrl(req);
   const urlSearch = url_parts ? url_parts.search : "";
   const urlPath = url_parts ? url_parts.pathname : "";
 
-  const originalCookies = {...req.cookies};
-  const cookies = {...req.cookies};
-  //console.log("cookies", cookies)
+  const cookies = {...req.cookies,
+    setCookies: res.cookie.bind(res)
+  };
   const customParams = createServices ? {services: createServices(cookies)} : {};
   const store = createServerStore(reducers, customParams, null);
   const htmlTemplate = fs.readFileSync(htmlTemplatePath, "utf8");
@@ -65,11 +55,6 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
     .then(() => {
       const content = renderHtml(reducers, htmlTemplate, routes, req, store);
 
-      const changedCookies = findChangedValues(originalCookies, cookies);
-      for (const key in changedCookies) {
-        res.cookie(key, changedCookies[key]);
-        //console.log("next changedCookie", key, changedCookies[key]);
-      }
       // It's better to handle redirects on a client because of a browser cache.
       sendResponse(res, content);
       next();
