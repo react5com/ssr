@@ -1,5 +1,5 @@
 import express from 'express';
-import { type DispatchFunction } from 'react-reducer-ssr';
+import { type DispatchFunction } from '@react5/reducer';
 export type LoadDataFunction = (dispatch: DispatchFunction, cookies: {}, urlSearch: string | null, params: any) => Promise<void>;
 export type RouteObjectSsr = {
     loadData?: LoadDataFunction;

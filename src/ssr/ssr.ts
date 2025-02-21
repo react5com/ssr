@@ -2,7 +2,7 @@ import express from 'express';
 import { matchPath, matchRoutes } from "react-router";
 import parseUrl from "parseurl";
 import fs from "fs";
-import { createServerStore, type DispatchFunction } from 'react-reducer-ssr'
+import { createServerStore, type DispatchFunction } from '@react5/reducer'
 import { renderHtml } from "./renderHtml";
 
 export type LoadDataFunction = (dispatch: DispatchFunction,
