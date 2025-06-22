@@ -1,8 +1,7 @@
 import { renderToString } from "react-dom/server";
-import { StaticRouter as Router } from 'react-router-dom/server'
-import { Routes } from "react-router-dom";
+import { StaticRouter as Router } from 'react-router'
+import { Routes } from "react-router";
 import { renderRoutes } from "@react5/router-layout";
-import { HelmetProvider } from "react-helmet-async";
 import serialize from "serialize-javascript";
 import { RootContextProvider } from "@react5/reducer";
 import { I18nextProvider } from "react-i18next";
@@ -31,13 +30,11 @@ export const renderHtml = (reducers: any, htmlTemplate: string, routes: any, req
   const helmetContext: any = {};
   const contentJsx = <I18nextProvider i18n={req.i18n}>
     <Router location={req.url}>
-      <HelmetProvider context={helmetContext}>
-        <RootContextProvider reducer={reducers} initialState={store?.root}>
-          <Routes>
-            {renderRoutes(routes)}
-          </Routes>
-        </RootContextProvider>
-      </HelmetProvider>
+      <RootContextProvider reducer={reducers} initialState={store?.root}>
+        <Routes>
+          {renderRoutes(routes)}
+        </Routes>
+      </RootContextProvider>
     </Router>
   </I18nextProvider>;
   const content = renderToString(contentJsx);
