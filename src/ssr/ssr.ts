@@ -13,7 +13,8 @@ export type RouteObjectSsr = {
   isNotFound?: boolean
 }
 
-export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, createServices?: (cookies: any) => any) => (
+export const ssr = (htmlTemplatePath: string, reducers: any, routes: any,
+  createServices?: (cookies: any) => any, verbose: boolean = false) => (
   req: express.Request, res: express.Response, next: express.NextFunction) => {
   const url_parts = parseUrl(req);
   const urlSearch = url_parts ? url_parts.search : "";
@@ -24,6 +25,9 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
   };
   const customParams = createServices ? {services: createServices(cookies)} : {};
   const store = createServerStore(reducers, customParams, null);
+  // if (verbose) {
+  //   console.log("SSR request:", store, reducers);
+  // }
   const htmlTemplate = fs.readFileSync(htmlTemplatePath, "utf8");
 
   const matches = matchRoutes(routes, urlPath || '');
@@ -60,6 +64,9 @@ export const ssr = (htmlTemplatePath: string, reducers: any, routes: any, create
       next();
     })
     .catch((err) => {
+      if (verbose) {
+        console.error('SSR error:', err instanceof Error ? err.stack || err.message : err);
+      }
       sendResponse(res, "Error happens: " + err);
       next();
     });

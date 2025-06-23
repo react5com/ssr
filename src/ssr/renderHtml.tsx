@@ -5,6 +5,7 @@ import { renderRoutes } from "@react5/router-layout";
 import serialize from "serialize-javascript";
 import { RootContextProvider } from "@react5/reducer";
 import { I18nextProvider } from "react-i18next";
+import { type HelmetData, HelmetProvider, renderMetaTags } from "@react5/helmet";
 
 function getInitiali18nState(req: any) {
   const initialLanguage = req.i18n?.languages?.[0];
@@ -27,24 +28,26 @@ function getInitiali18nState(req: any) {
 
 export const renderHtml = (reducers: any, htmlTemplate: string, routes: any, req: any, store: any) => {
   const { initialLanguage, initialI18nStore } = getInitiali18nState(req);
-  const helmetContext: any = {};
-  const contentJsx = <I18nextProvider i18n={req.i18n}>
-    <Router location={req.url}>
-      <RootContextProvider reducer={reducers} initialState={store?.root}>
-        <Routes>
-          {renderRoutes(routes)}
-        </Routes>
-      </RootContextProvider>
-    </Router>
-  </I18nextProvider>;
+  const helmetContext: HelmetData = {meta: [], link: []};
+  const contentJsx = <HelmetProvider context={helmetContext}>
+    <I18nextProvider i18n={req.i18n}>
+      <Router location={req.url}>
+        <RootContextProvider reducer={reducers} initialState={store?.root}>
+          <Routes>
+            {renderRoutes(routes)}
+          </Routes>
+        </RootContextProvider>
+      </Router>
+    </I18nextProvider>
+  </HelmetProvider>;
   const content = renderToString(contentJsx);
 
   const isProd = process.env.NODE_ENV === 'production';
   const serviceWorkerScript = isProd ? `<script src="/static/js/service-worker.js" defer></script>` : '';
 
-  const { helmet } = helmetContext;
-  const helmetTitle = (helmet && helmet.title) ? helmet.title.toString() : '';
-  const helmetMeta = (helmet && helmet.meta) ? helmet.meta.toString() : '';
+  const { title, meta } = helmetContext;
+  const helmetTitle = title ? title : '';
+  const helmetMeta = meta ? renderMetaTags(meta) : '';
 
   const html = htmlTemplate.replace('<div id="app"></div>', `<div id="app">${content}</div>
       <script>
